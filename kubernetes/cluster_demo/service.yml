@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  # Choose a specific pod among many pods
+  selector:
+    app.kubernetes.io/name: MyApp
+  type: NodePort
+  ports:
+    # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
+    - port: 80
+      targetPort: nginx-cont-port
