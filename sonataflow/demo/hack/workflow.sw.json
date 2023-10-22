@@ -1,0 +1,65 @@
+{
+  "id": "travelbudget",
+  "specVersion": "0.8",
+  "name": "Travel Budget",
+  "start": "Calculate Increase Delta",
+  "functions": [{
+    "name": "calculateDelta",
+    "type": "expression",
+    "operation": "${ {increaseVal: (.newBudget - .currentBudget) } }"
+    
+  }],
+  "states": [
+    {
+      "name": "Calculate Increase Delta",
+      "type": "operation",
+      "actions": [
+        {
+          "name": "calculateIncreaseAction",
+          "functionRef": {
+            "refName": "calculateDelta",
+            "arguments": {
+              "currentBudget": "${ .currentBudget }",
+              "newBudget": "${ .newBudget }"
+            }
+          }
+        }
+      ],
+      "transition": "Evaluate"
+    },
+    {
+      "name": "Evaluate",
+      "type": "switch",
+      "dataConditions": [
+        {
+          "condition": "${ .increaseVal < 500 }",
+          "transition": "Approve"
+        },
+        {
+          "condition": "${ .increaseVal >= 500 }",
+          "transition": "Reject"
+        }
+      ],
+      "defaultCondition": {
+        "transition": "Reject"
+      }
+    },
+    {
+      "name": "Approve",
+      "type": "inject",
+      "data": {
+        "message": "Congrats!! You get a budget increase!"
+      },
+      "end": true
+    },
+    {
+      "name": "Reject",
+      "type": "inject",
+      "data": {
+        "message": "Rejected."
+      },
+      "end": true
+    }
+   
+  ]
+}
